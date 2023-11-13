@@ -1,0 +1,33 @@
+weight = int(input("Укажите вес (кг): "))
+height = int(input("Укажите рост (см): "))
+age = int(input("Укажите возраст: "))
+gender = int(input('''Укажите пол:
+1.Мужской
+2.Женский
+'''))
+activity = int(input('''Укажите свой образ жизни:
+1.Малоподвижный
+2.Треникровки 1-3 раза в неделю
+3.Тренировки 3-5 раза в неделю
+4.Выскоие нагрузки каждый день
+5.Экстримальные нагрзки
+'''))
+if activity == 1:
+    activity = 1.2
+if activity == 2:
+    activity = 1.375
+if activity == 3:
+    activity = 1.55
+if activity == 4:
+    activity = 1.725
+if activity == 5:
+    activity =1.9
+
+if gender == 1:
+    print(f"Количество Ккал: {(10*weight+6.25*height-5*age+5)*activity}")
+if gender == 2:
+    print(f"Количество Ккал: {(10*weight+6.25*height-5*age-161)*activity}")
+
+print(f"Суточная норма белка: {1.2*weight} грамм")
+print(f"Суточная норма жиров: {1.5*weight} грамм")
+print(f"Суточная норма углеводов: {2*weight} грамм")
