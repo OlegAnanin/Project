@@ -1,0 +1,43 @@
+from tkinter import *
+from tkinter.ttk import Combobox
+
+window = Tk()
+
+#размер: ширина;высота
+window.geometry('900x300') 
+window.title('ДОБРО ПОЖАЛОВАТЬ В ПРОГРАММУ "РАСЧЕТ КБЖУ"')
+
+#вывод текста
+lbl = Label(window, text="ВВЕДИТЕ ВЕС",font=("Courier New", 10))  
+lbl.grid(column=0, row=0)  
+
+#пользов-й ввод
+txt = Entry(window, width=10) #state='disabled'
+txt.grid(column=2, row=0)
+txt.focus()
+
+
+
+lbl = Label(window, text="ВВЕДИТЕ РОСТ (СМ)",font=("Courier New", 10))  
+lbl.grid(column=0, row=1)
+
+txt = Entry(window, width=10) #state='disabled'
+txt.grid(column=2, row=1)
+
+
+
+lbl = Label(window, text="ВЫБЕРИТЕ ПОЛ",font=("Courier New", 10))  
+lbl.grid(column=0, row=2)
+
+combo = Combobox(window)  
+combo['values'] = ("Мужской",";Женский")  
+combo.current("Мужской")  # установите вариант по умолчанию  
+combo.grid(column=0, row=2)  
+
+
+#кнопка
+#btn = Button(window, text="Не нажимать!", bg="black", fg="red")
+#btn.grid(column=1, row=1)
+
+
+window.mainloop()
