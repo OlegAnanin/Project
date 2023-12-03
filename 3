@@ -1,0 +1,44 @@
+from tkinter import *
+from tkinter.ttk import Combobox
+
+def calculate_kbzu():
+    weight = float(weight_entry.get())
+    height = float(height_entry.get())
+    gender = gender_combo.get()
+
+    # Здесь можно добавить расчет КБЖУ в соответствии с вашими требованиями
+    # Пример:
+    result_text.set(f"Вес: {weight}, Рост: {height}, Пол: {gender}")
+
+# Создаем основное окно
+window = Tk()
+window.geometry('400x200')  # Размер окна
+window.title('Расчет КБЖУ')
+
+# Виджеты для ввода данных
+weight_label = Label(window, text="Вес (кг):")
+weight_label.grid(column=0, row=0)
+weight_entry = Entry(window, width=10)
+weight_entry.grid(column=1, row=0)
+
+height_label = Label(window, text="Рост (см):")
+height_label.grid(column=0, row=1)
+height_entry = Entry(window, width=10)
+height_entry.grid(column=1, row=1)
+
+gender_label = Label(window, text="Пол:")
+gender_label.grid(column=0, row=2)
+gender_combo = Combobox(window, values=("Мужской", "Женский"))
+gender_combo.current(0)
+gender_combo.grid(column=1, row=2)
+
+# Кнопка для расчета
+calculate_button = Button(window, text="Рассчитать", command=calculate_kbzu)
+calculate_button.grid(column=0, row=3, columnspan=2)
+
+# Результаты расчета
+result_text = StringVar()
+result_label = Label(window, textvariable=result_text)
+result_label.grid(column=0, row=4, columnspan=2)
+
+window.mainloop()
