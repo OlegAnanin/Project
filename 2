@@ -1,0 +1,53 @@
+def calculate_kbzu_with_goal():
+    weight = float(input("Введите ваш текущий вес в кг: "))
+    height = float(input("Введите ваш рост в см: "))
+    age = int(input("Введите ваш возраст: "))
+    gender = input("Введите ваш пол (мужчина/женщина): ")
+    activity_level = input("Введите ваш уровень активности (низкий/умеренный/высокий): ")
+
+    goal = input("Выберите вашу цель (набрать/сбросить/сохранить вес): ").lower()
+
+    # Формула для расчета базового метаболизма (BMR)
+    if gender.lower() == 'мужчина':
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5
+    elif gender.lower() == 'женщина':
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161
+    else:
+        return "Некорректно указан пол"
+
+    # Учет уровня физической активности
+    activity_multipliers = {
+        'низкий': 1.2,
+        'умеренный': 1.55,
+        'высокий': 1.725,
+    }
+    if activity_level.lower() in activity_multipliers:
+        total_calories = bmr * activity_multipliers[activity_level.lower()]
+    else:
+        return "Некорректно указан уровень активности"
+
+    # Расчет белков, жиров и углеводов (в соотношении 20/30/50)
+    protein_percentage = 20
+    fat_percentage = 30
+    carb_percentage = 50
+
+    protein = total_calories * protein_percentage / 100 / 4
+    fat = total_calories * fat_percentage / 100 / 9
+    carbs = total_calories * carb_percentage / 100 / 4
+
+    # Учет цели пользователя
+    if goal == 'набрать':
+        total_calories += 500  # Дополнительные калории для набора веса
+    elif goal == 'сбросить':
+        total_calories -= 500  # Сокращение калорий для сброса веса
+
+    return {
+        'total_calories': total_calories,
+        'protein': protein,
+        'fat': fat,
+        'carbs': carbs
+    }
+
+# Пример использования
+result = calculate_kbzu_with_goal()
+print(result)
