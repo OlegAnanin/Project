@@ -1,0 +1,12 @@
+# Учет цели пользователя
+if goal == 'набрать':
+    total_calories += 500  # Дополнительные калории для набора веса
+elif goal == 'сбросить':
+    total_calories -= 500  # Сокращение калорий для сброса веса
+
+# Расчет белков, жиров и углеводов в граммах
+protein = total_calories * 0.2 / 4  # 1 г белка = 4 ккал
+fat = total_calories * 0.3 / 9  # 1 г жира = 9 ккал
+carbohydrates = total_calories * 0.5 / 4  # 1 г углеводов = 4 ккал
+
+result_text.set(f"КБЖУ:\nКалории: {total_calories:.2f} ккал\nБелки: {protein:.2f} г\nЖиры: {fat:.2f} г\nУглеводы: {carbohydrates:.2f} г")
