@@ -1,0 +1,25 @@
+from itertools import combinations
+# KBZU
+dish = {
+    'dish1': {'k':200,'b':16,'z':20,'u':43},
+    'dish2': {'k':300,'b':30,'z':30,'u':60}
+}
+
+kk = 300
+bb = 30
+zz = 30
+uu = 60
+
+thatsit = []
+
+for dish, kbzu in dish.items():
+    
+    if(
+        kbzu['k'] == kk
+        and kbzu['b'] == bb
+        and kbzu['z'] == zz
+        and kbzu['u'] == uu
+    ):
+        thatsit.append(dish)
+
+print(thatsit)
