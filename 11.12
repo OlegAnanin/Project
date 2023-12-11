@@ -1,0 +1,5 @@
+breakfast_text.set(f"На завтрак\n"
+                           f"Ккал: {total_calories*0.3}\n"
+                           f"Белки: {total_calories * 0.09 / 4}\n"
+                           f"Жиры: {total_calories * 0.09 / 9}\n"
+                           f"Углеводы: {total_calories * 0.12 / 4}")
