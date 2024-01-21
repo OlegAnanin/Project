@@ -1,0 +1,48 @@
+from tkinter import *
+from tkinter.ttk import Combobox
+import random  # Для генерации случайных блюд (замените на свою логику выбора блюд)
+
+def kbzu():
+    def calculate_kbzu():
+        # (ваш текущий код остается без изменений)
+
+    def create_plan():
+        # Список блюд с данными о калориях, белках, жирах и углеводах (замените на свой реальный список блюд)
+        meals = [
+            {"name": "Омлет", "calories": 200, "proteins": 20, "fats": 12, "carbs": 5},
+            {"name": "Творог", "calories": 150, "proteins": 15, "fats": 8, "carbs": 10},
+            # Добавьте свои блюда
+        ]
+
+        # Нормы калорий и питательных веществ для каждого приема пищи (замените на свои нормы)
+        calories = {'breakfast': 500, 'lunch': 600, 'dinner': 700, 'snack': 200}
+        proteins = {'breakfast': 20, 'lunch': 25, 'dinner': 30, 'snack': 10}
+        fats = {'breakfast': 15, 'lunch': 20, 'dinner': 25, 'snack': 8}
+        carbs = {'breakfast': 30, 'lunch': 40, 'dinner': 50, 'snack': 15}
+
+        # Создаем список блюд для завтрака, укладываемся в нормы
+        breakfast_options = []
+        total_calories_breakfast = 0
+        total_proteins_breakfast = 0
+        total_fats_breakfast = 0
+        total_carbs_breakfast = 0
+
+        while total_calories_breakfast < calories['breakfast'] and total_proteins_breakfast < proteins['breakfast'] \
+                and total_fats_breakfast < fats['breakfast'] and total_carbs_breakfast < carbs['breakfast']:
+            meal = random.choice(meals)
+            if (total_calories_breakfast + meal['calories'] <= calories['breakfast'] and
+                    total_proteins_breakfast + meal['proteins'] <= proteins['breakfast'] and
+                    total_fats_breakfast + meal['fats'] <= fats['breakfast'] and
+                    total_carbs_breakfast + meal['carbs'] <= carbs['breakfast']):
+                breakfast_options.append(meal)
+                total_calories_breakfast += meal['calories']
+                total_proteins_breakfast += meal['proteins']
+                total_fats_breakfast += meal['fats']
+                total_carbs_breakfast += meal['carbs']
+
+        # Отображаем результаты выбора блюд на завтрак
+        breakfast_text.set("Завтрак:")
+        for meal in breakfast_options:
+            breakfast_text.set(f"{breakfast_text.get()}\n{meal['name']}")
+
+    # Ваш остальной код остается без изменений
