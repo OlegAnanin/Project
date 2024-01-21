@@ -1,0 +1,45 @@
+# Список блюд с информацией о калориях, белках, жирах и углеводах
+dishes = [
+    {"название": "Omelette", "калории": 200, "белки": 15, "жиры": 12, "углеводы": 5},
+    {"название": "Cottage Cheese", "калории": 120, "белки": 20, "жиры": 5, "углеводы": 3},
+    # Добавьте другие блюда в список
+]
+
+# Нормы на завтрак, обед, ужин и перекус
+norms = {"завтрак": {"калории": 500, "белки": 30, "жиры": 15, "углеводы": 50},
+         "обед": {"калории": 700, "белки": 40, "жиры": 20, "углеводы": 60},
+         "ужин": {"калории": 600, "белки": 35, "жиры": 18, "углеводы": 55},
+         "перекус": {"калории": 150, "белки": 10, "жиры": 5, "углеводы": 15}}
+
+def choose_dishes(nutrition_norms, available_dishes):
+    selected_dishes = []
+    current_norms = nutrition_norms.copy()
+
+    for meal_time in nutrition_norms:
+        while current_norms[meal_time]["калории"] > 0:
+            print(f"\n{meal_time.capitalize()}: Осталось {current_norms[meal_time]['калории']} калорий.")
+            print("Доступные блюда:")
+            for dish in available_dishes:
+                print(f"{dish['название']}: {dish['калории']} калорий")
+
+            selected_dish_name = input("Выберите блюдо (или 'завершить' для завершения): ")
+
+            if selected_dish_name.lower() == 'завершить':
+                break
+
+            for dish in available_dishes:
+                if dish['название'].lower() == selected_dish_name.lower():
+                    selected_dishes.append(dish)
+                    current_norms[meal_time]["калории"] -= dish["калории"]
+                    current_norms[meal_time]["белки"] -= dish["белки"]
+                    current_norms[meal_time]["жиры"] -= dish["жиры"]
+                    current_norms[meal_time]["углеводы"] -= dish["углеводы"]
+
+    return selected_dishes
+
+# Пример использования
+selected_dishes_breakfast = choose_dishes(norms["завтрак"], dishes)
+print("Выбранные блюда на завтрак:")
+for dish in selected_dishes_breakfast:
+    print(dish['название'])
+# Повторите процесс для обеда, ужина и перекуса
