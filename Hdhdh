@@ -1,0 +1,62 @@
+def suggest_meals(meals, calories, proteins, fats, carbs):
+    breakfast = []
+    lunch = []
+    dinner = []
+    snack = []
+
+    for meal in meals:
+        if meal['calories'] <= calories['breakfast'] and meal['proteins'] <= proteins['breakfast'] and meal['fats'] <= fats['breakfast'] and meal['carbs'] <= carbs['breakfast']:
+            breakfast.append(meal)
+
+    print("Breakfast options:")
+    for meal in breakfast:
+        print(meal['name'])
+
+    if len(breakfast) == 0:
+        print("No breakfast options available.")
+
+    while True:
+        total_calories = 0
+        total_proteins = 0
+        total_fats = 0
+        total_carbs = 0
+
+        for meal in breakfast:
+            total_calories += meal['calories']
+            total_proteins += meal['proteins']
+            total_fats += meal['fats']
+            total_carbs += meal['carbs']
+
+        if total_calories >= calories['breakfast'] and total_proteins >= proteins['breakfast'] and total_fats >= fats['breakfast'] and total_carbs >= carbs['breakfast']:
+            break
+
+        print("You need to add more food to your breakfast.")
+        print("Here are some options:")
+        for meal in meals:
+            if meal not in breakfast and meal['calories'] <= calories['breakfast'] - total_calories and meal['proteins'] <= proteins['breakfast'] - total_proteins and meal['fats'] <= fats['breakfast'] - total_fats and meal['carbs'] <= carbs['breakfast'] - total_carbs:
+                print(meal['name'])
+
+        meal_name = input("Enter the name of the meal you want to add: ")
+        for meal in meals:
+            if meal['name'] == meal_name:
+                breakfast.append(meal)
+                break
+
+    print("Your breakfast is complete!")
+    print("Here are your options for lunch:")
+    for meal in meals:
+        if meal['calories'] <= calories['lunch'] and meal['proteins'] <= proteins['lunch'] and meal['fats'] <= fats['lunch'] and meal['carbs'] <= carbs['lunch']:
+            lunch.append(meal)
+            print(meal['name'])
+
+    print("Here are your options for dinner:")
+    for meal in meals:
+        if meal['calories'] <= calories['dinner'] and meal['proteins'] <= proteins['dinner'] and meal['fats'] <= fats['dinner'] and meal['carbs'] <= carbs['dinner']:
+            dinner.append(meal)
+            print(meal['name'])
+
+    print("Here are your options for snacks:")
+    for meal in meals:
+        if meal['calories'] <= calories['snack'] and meal['proteins'] <= proteins['snack'] and meal['fats'] <= fats['snack'] and meal['carbs'] <= carbs['snack']:
+            snack.append(meal)
+            print(meal['name'])
