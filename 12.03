@@ -1,0 +1,259 @@
+from tkinter import *
+from tkinter.ttk import Combobox
+import random
+import csv
+
+def calculate_kbzu():
+    try:
+        weight = float(weight_entry.get())
+        height = float(height_entry.get())
+        age = float(age_entry.get())
+        gender = gender_combo.get()
+        activity_level = activity_combo.get()
+        goal = goal_combo.get()
+
+        if gender == 'Мужской':
+            bmr = 10 * weight + 6.25 * height - 5 * age + 5
+        elif gender == 'Женский':
+            bmr = 10 * weight + 6.25 * height - 5 * age - 161
+
+        activity_multipliers = {'Малоподвижный': 1.2, 'Тренировки 1-3 раза в неделю': 1.375,
+                                'Тренировки 3-5 раз в неделю': 1.55, 'Высокие нагрузки каждый день': 1.725,
+                                'Экстремальные нагрузки': 1.9}
+
+        activity = activity_multipliers.get(activity_level,
+                                            1.2)  # По умолчанию устанавливаем малоподвижный уровень активности
+
+        if goal == "набрать":
+            total_calories = bmr * activity * 1.2
+        if goal == "сбросить":
+            total_calories = bmr * activity * 0.85
+        elif goal == "сохранить":
+            total_calories = bmr * activity
+        total_calories = round(total_calories)
+
+        result_text.set(f"Количество Ккал: {total_calories:.2f}\n"
+                        f"Суточная норма белка: {round(total_calories * 0.3 / 4)} грамм\n"
+                        f"Суточная норма жиров: {round(total_calories * 0.3 / 9)} грамм\n"
+                        f"Суточная норма углеводов: {round(total_calories * 0.4 / 4)} грамм")
+
+        breakfast_text.set(f"На завтрак: "
+                           f"Ккал: {round(total_calories * 0.3)}\n"
+                           f"Белки: {round(total_calories * 0.09 / 4)}\n"
+                           f"Жиры: {round(total_calories * 0.09 / 9)}\n"
+                           f"Углеводы: {round(total_calories * 0.12 / 4)}")
+
+        snack_text.set(f"Перекус: "
+                       f"Ккал: {round(total_calories * 0.15)}\n"
+                       f"Белки: {round(total_calories * 0.045 / 4)}\n"
+                       f"Жиры: {round(total_calories * 0.045 / 9)}\n"
+                       f"Углеводы: {round(total_calories * 0.06 / 4)}")
+
+        lunch_text.set(f"На обед: "
+                       f"Ккал: {round(total_calories * 0.35)}\n"
+                       f"Белки: {round(total_calories * 0.105 / 4)}\n"
+                       f"Жиры: {round(total_calories * 0.105 / 9)}\n"
+                       f"Углеводы: {round(total_calories * 0.14 / 4)}")
+
+        dinner_text.set(f"На ужин: "
+                        f"Ккал: {round(total_calories * 0.25)}\n"
+                        f"Белки: {round(total_calories * 0.075 / 4)}\n"
+                        f"Жиры: {round(total_calories * 0.75 / 9)}\n"
+                        f"Углеводы: {round(total_calories * 0.1 / 4)}")
+
+    except ValueError:
+        result_text.set("Введите корректные числовые значения")
+
+def meals_file(filename):
+    meals = []
+    with open(filename, newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            meals.append({
+                "name": row['Продукт'],
+                "calories": float(row['Калорийность']),
+                "proteins": float(row["Белки"]),
+                "fats": float(row['Жиры']),
+                'carbs': float(row['Углеводы'])
+            })
+    return meals
+def create_plan():
+    # Список блюд с данными о калориях, белках, жирах и углеводах (замените на свой реальный список блюд)
+    meals = meals_file('meals.txt')
+
+    # Нормы калорий и питательных веществ для каждого приема пищи (замените на свои нормы)
+    total_calories = result_text.get().split("\n")[0].split(":")[1].strip()
+    calories = {'breakfast': round(float(total_calories) * 0.3),
+                'lunch': round(float(total_calories) * 0.35),
+                'dinner': round(float(total_calories) * 0.25),
+                'snack': round(float(total_calories) * 0.15)}
+    proteins = {'breakfast': round(float(total_calories) * 0.09 / 4),
+                'lunch': round(float(total_calories) * 0.105 / 4),
+                'dinner': round(float(total_calories) * 0.075 / 4),
+                'snack': round(float(total_calories) * 0.045 / 4)}
+    fats = {'breakfast': round(float(total_calories) * 0.09 / 9),
+            'lunch': round(float(total_calories) * 0.105 / 9),
+            'dinner': round(float(total_calories) * 0.75 / 9),
+            'snack': round(float(total_calories) * 0.045 / 9)}
+    carbs = {'breakfast': round(float(total_calories) * 0.12 / 4),
+             'lunch': round(float(total_calories) * 0.14 / 4),
+             'dinner': round(float(total_calories) * 0.1 / 4),
+             'snack': round(float(total_calories) * 0.06 / 4)}
+
+    # Создаем список блюд для завтрака, укладываемся в нормы
+    breakfast_options = []
+    total_calories_breakfast = 0
+    total_proteins_breakfast = 0
+    total_fats_breakfast = 0
+    total_carbs_breakfast = 0
+
+    while total_calories_breakfast < calories['breakfast'] and total_proteins_breakfast < proteins['breakfast'] \
+            and total_fats_breakfast < fats['breakfast'] and total_carbs_breakfast < carbs['breakfast']:
+        meal = random.choice(meals)
+        if (total_calories_breakfast + meal['calories'] <= calories['breakfast'] and
+                total_proteins_breakfast + meal['proteins'] <= proteins['breakfast'] and
+                total_fats_breakfast + meal['fats'] <= fats['breakfast'] and
+                total_carbs_breakfast + meal['carbs'] <= carbs['breakfast']):
+            breakfast_options.append(meal)
+            total_calories_breakfast += meal['calories']
+            total_proteins_breakfast += meal['proteins']
+            total_fats_breakfast += meal['fats']
+            total_carbs_breakfast += meal['carbs']
+            meals.remove(meal)
+
+            if not meals:
+                result_text.set("Недостатточно блюд для составляения плана.")
+                return
+
+    # Отображаем результаты выбора блюд на завтрак
+    breakfast_text.set("Завтрак:")
+    for meal in breakfast_options:
+        breakfast_text.set(f"{breakfast_text.get()}\n{meal['name']}")
+
+    # Создаем список блюд для обеда, укладываемся в нормы
+    lunch_options = []
+    total_calories_lunch = 0
+    total_proteins_lunch = 0
+    total_fats_lunch = 0
+    total_carbs_lunch = 0
+
+    while total_calories_lunch < calories['lunch'] and total_proteins_lunch < proteins['lunch'] \
+            and total_fats_lunch < fats['lunch'] and total_carbs_lunch < carbs['lunch']:
+        meal = random.choice(meals)
+        if (total_calories_lunch + meal['calories'] <= calories['lunch'] and
+                total_proteins_lunch + meal['proteins'] <= proteins['lunch'] and
+                total_fats_lunch + meal['fats'] <= fats['lunch'] and
+                total_carbs_lunch + meal['carbs'] <= carbs['lunch']):
+            lunch_options.append(meal)
+            total_calories_lunch += meal['calories']
+            total_proteins_lunch += meal['proteins']
+            total_fats_lunch += meal['fats']
+            total_carbs_lunch += meal['carbs']
+            meals.remove(meal)
+
+            if not meals:
+                result_text.set("Недостатточно блюд для составляения плана.")
+                return
+
+    # Отображаем результаты выбора блюд на обед
+    lunch_text.set("Обед:")
+    for meal in lunch_options:
+        lunch_text.set(f"{lunch_text.get()}\n{meal['name']}")
+
+    # ... остальные приемы пищи аналогично ...
+
+
+# Создаем основное окно
+window = Tk()
+window.geometry('400x400')  # Размер окна
+window.title('Расчет КБЖУ')
+
+# Виджеты для ввода данных
+# Виджеты для ввода данных
+# Вес
+weight_label = Label(window, text="Вес (кг):")
+weight_label.grid(column=0, row=0)
+weight_entry = Entry(window, width=10)
+weight_entry.grid(column=1, row=0)
+
+# Рост
+height_label = Label(window, text="Рост (см):")
+height_label.grid(column=0, row=1)
+height_entry = Entry(window, width=10)
+height_entry.grid(column=1, row=1)
+
+# Возраст
+age_label = Label(window, text="Возраст:")
+age_label.grid(column=0, row=2)
+age_entry = Entry(window, width=10)
+age_entry.grid(column=1, row=2)
+
+# Пол
+gender_label = Label(window, text="Пол:")
+gender_label.grid(column=0, row=3)
+gender_combo = Combobox(window, values=("Мужской", "Женский"))
+gender_combo.current(0)
+gender_combo.grid(column=1, row=3)
+
+# Уровень активности
+activity_label = Label(window, text="Уровень активности:")
+activity_label.grid(column=0, row=4)
+activity_combo = Combobox(window, values=(
+"Малоподвижный", "Тренировки 1-3 раза в неделю", "Тренировки 3-5 раз в неделю", "Высокие нагрузки каждый день",
+"Экстремальные нагрузки"))
+activity_combo.current(0)
+activity_combo.grid(column=1, row=4)
+
+# Цель
+goal_label = Label(window, text="Цель:")
+goal_label.grid(column=0, row=7)
+goal_combo = Combobox(window, values=("сбросить", "набрать", "сохранить"))
+goal_combo.current(0)
+goal_combo.grid(column=1, row=7)
+
+# Результаты расчета
+result_text = StringVar()
+result_label = Label(window, textvariable=result_text)
+result_label.grid(column=0, row=9, columnspan=2)
+
+# КБЖУ на завтрак
+breakfast_text = StringVar()
+breakfast_label = Label(window, textvariable=breakfast_text)
+breakfast_label.grid(column=0, row=10, columnspan=1)
+
+# КБЖУ перекус
+snack_text = StringVar()
+snack_label = Label(window, textvariable=snack_text)
+snack_label.grid(column=0, row=11, columnspan=1)
+
+# КБЖУ на обед
+lunch_text = StringVar()
+lunch_label = Label(window, textvariable=lunch_text)
+lunch_label.grid(column=1, row=10, columnspan=2)
+
+# КБЖУ на ужин
+dinner_text = StringVar()
+dinner_label = Label(window, textvariable=dinner_text)
+dinner_label.grid(column=1, row=11, columnspan=2)
+
+# Кнопка для расчета
+calculate_button = Button(window, text="Рассчитать", command=calculate_kbzu)
+calculate_button.grid(column=0, row=8, columnspan=1)
+
+# Кнопка для составления плана
+plan_button = Button(window, text="Составить план", command=create_plan)
+plan_button.grid(column=1, row=8, columnspan=2)
+
+# Результаты расчета
+result_text = StringVar()
+result_label = Label(window, textvariable=result_text)
+result_label.grid(column=0, row=9, columnspan=2)
+
+# КБЖУ на завтрак
+breakfast_text = StringVar()
+breakfast_label = Label(window, textvariable=breakfast_text)
+breakfast_label.grid(column=0, row=10, columnspan=1)
+
+# ... остальные переменные для приемов пищи ...
+
+window.mainloop()
