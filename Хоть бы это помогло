@@ -1,1 +1,49 @@
+def create_plan():
+    try:
+        # ... (ваш код)
+
+        # Создаем список блюд для завтрака, укладываемся в нормы
+        breakfast_options = []
+        remaining_meals = meals.copy()
+
+        for meal_type in ['breakfast', 'lunch', 'dinner', 'snack']:
+            total_calories_meal = 0
+            total_proteins_meal = 0
+            total_fats_meal = 0
+            total_carbs_meal = 0
+
+            while (
+                total_calories_meal < calories[meal_type] and
+                total_proteins_meal < proteins[meal_type] and
+                total_fats_meal < fats[meal_type] and
+                total_carbs_meal < carbs[meal_type] and
+                remaining_meals
+            ):
+                meal = random.choice(remaining_meals)
+                if (
+                    total_calories_meal + meal['calories'] <= calories[meal_type] and
+                    total_proteins_meal + meal['proteins'] <= proteins[meal_type] and
+                    total_fats_meal + meal['fats'] <= fats[meal_type] and
+                    total_carbs_meal + meal['carbs'] <= carbs[meal_type]
+                ):
+                    breakfast_options.append(meal)
+                    total_calories_meal += meal['calories']
+                    total_proteins_meal += meal['proteins']
+                    total_fats_meal += meal['fats']
+                    total_carbs_meal += meal['carbs']
+                    remaining_meals.remove(meal)
+
+        # ... (остальные приемы пищи аналогично)
+
+        # Отображаем результаты выбора блюд
+        display_results(breakfast_options, 'Завтрак:', breakfast_text)
+        # ... (остальные приемы пищи аналогично)
+
+    except ValueError:
+        result_text.set("Введите корректные числовые значения")
+
+def display_results(meals_list, meal_type_label, meal_text_variable):
+    meal_text_variable.set(meal_type_label)
+    for meal in meals_list:
+        meal_text_variable.set(f"{meal_text_variable.get()}\n{meal['name']}")
 
